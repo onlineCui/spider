@@ -5,7 +5,7 @@ import socket
 if __name__=='__main__':
     socket.setdefaulttimeout(10)
     
-    htmlFile=open('index.txt','w')
+    htmlFile=open('index.txt','w') ##the entrance address
     url='http://www.zju.edu.cn/'
     htmlFile.write(urllib.urlopen(url).read())
     htmlFile.close()
