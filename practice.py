@@ -1,6 +1,7 @@
 import urllib
 import re
 import socket
+import urlparse
 
 if __name__=='__main__':
     socket.setdefaulttimeout(10)
@@ -10,7 +11,7 @@ if __name__=='__main__':
     htmlFile.write(urllib.urlopen(url).read())
     htmlFile.close()
 
-    pattern='href="http://\S*\"'
+    pattern='href="\S*\"'
 
     saveTxt=open('save.txt','w')
     htmlFile=open('index.txt','r')
@@ -18,7 +19,8 @@ if __name__=='__main__':
         text=line
         ma=re.search(pattern,text)
         if ma is not None :
-            src=text[ma.start():ma.end()].split('"')[1]            
+            srcTail=text[ma.start():ma.end()].split('"')[1]            
+            src=urlparse.urljoin(url,srcTail)
             saveTxt.write(src)
             saveTxt.write('\n')
     htmlFile.close()
