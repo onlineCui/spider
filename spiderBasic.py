@@ -17,17 +17,16 @@ def spiderWeb(url,count):
         htmlFile.write(urllib.urlopen(url).read())
         htmlFile.close()
         
-        pattern='href="[^(javascript)]\S*[^(#)(css)(js)]\"'
+        pattern=re.compile('href="[^(javascript)]\S*[^(#)(css)(js)]\"')
         saveTxt=open('save.txt','w')
         htmlFile=open((str(count)+'.txt'),'r')
         for line in htmlFile:
-            ma=re.search(pattern,line)
-            #print line
-            if ma is not None :
-                srcTail=line[ma.start():ma.end()].split('"')[1]            
+            ans=re.findall(pattern,line)
+            for one in ans :
+                srcTail=one.split('"')[1]            
                 src=urlparse.urljoin(url,srcTail)
                 saveTxt.write(src)
-                #print src
+                print src
                 saveTxt.write('\n')
         htmlFile.close()
         saveTxt.close()
@@ -38,11 +37,10 @@ def spiderWeb(url,count):
             if table.has_key(url):
                 print url+'已爬取，跳过'
             else:
-                print url+'》》》》》'
+                print '正在爬取'+url
                 count=add(count)
                 table[url]=count
                 htmlFile=open((str(table[url])+'.txt'),'w')
-                print str(table[url])+'文件写入中'
                 try:
                     htmlFile.write(urllib.urlopen(url).read())
                 except:
