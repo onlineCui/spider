@@ -18,36 +18,27 @@ def spiderWeb(url,count):
         htmlFile.close()
         
         pattern=re.compile('href="[^(javascript)]\S*[^(#)(css)(js)]\"')
-        saveTxt=open('save.txt','w')
         htmlFile=open((str(count)+'.txt'),'r')
         for line in htmlFile:
             ans=re.findall(pattern,line)
             for one in ans :
-                srcTail=one.split('"')[1]            
-                src=urlparse.urljoin(url,srcTail)
-                saveTxt.write(src)
-                #print src
-                saveTxt.write('\n')
+                urlTail=one.split('"')[1]            
+                url=urlparse.urljoin(url,urlTail)
+                if table.has_key(url):
+                    print 'skip---'+url
+                else:
+                    print 'download---'+url
+                    count=add(count)
+                    table[url]=count
+                    catchFile=open((str(table[url])+'.txt'),'w')
+                    try:
+                        catchFile.write(urllib.urlopen(url).read())
+                    except:
+                        pass
+                    finally:
+                        catchFile.close()               
         htmlFile.close()
-        saveTxt.close()
         
-        saveTxt=open('save.txt','r')
-        for line in saveTxt:
-            url=line.strip('\n')
-            if table.has_key(url):
-                print 'skip---'+url
-            else:
-                print 'download---'+url
-                count=add(count)
-                table[url]=count
-                htmlFile=open((str(table[url])+'.txt'),'w')
-                try:
-                    htmlFile.write(urllib.urlopen(url).read())
-                except:
-                    pass
-                finally:
-                    htmlFile.close()
-        saveTxt.close()
 
     urlMapFile=open('map.txt','w')
     for key in table.keys():
