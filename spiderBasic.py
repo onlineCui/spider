@@ -26,7 +26,7 @@ def spiderWeb(url,count):
                 srcTail=one.split('"')[1]            
                 src=urlparse.urljoin(url,srcTail)
                 saveTxt.write(src)
-                print src
+                #print src
                 saveTxt.write('\n')
         htmlFile.close()
         saveTxt.close()
@@ -35,9 +35,9 @@ def spiderWeb(url,count):
         for line in saveTxt:
             url=line.strip('\n')
             if table.has_key(url):
-                print url+'已爬取，跳过'
+                print 'skip---'+url
             else:
-                print '正在爬取'+url
+                print 'download---'+url
                 count=add(count)
                 table[url]=count
                 htmlFile=open((str(table[url])+'.txt'),'w')
@@ -54,7 +54,7 @@ def spiderWeb(url,count):
         urlMapFile.write(str(key)+'\t'+str(table[key])+'\n')
     urlMapFile.close()
     
-    print '一次爬取结束'
+    print 'success!'
 
 
 if __name__=='__main__':
